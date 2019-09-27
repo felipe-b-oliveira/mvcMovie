@@ -11,18 +11,18 @@ namespace exercicioLinq
     {
         static void Main(string[] args)
         {
-            string caminho;
-
+            Arquivo x = new Arquivo();
+            
             do
             {
                 Console.WriteLine("Digite o caminho completo do arquivo: ");
-                caminho = Console.ReadLine();
+                x.caminho = Console.ReadLine();
 
             } while (testarCaminho() == false);
 
             List<Funcionario> listaFunc = new List<Funcionario>();
 
-            using (StreamReader sr = File.OpenText(caminho))
+            using (StreamReader sr = File.OpenText(x.caminho))
             {
                 while (!sr.EndOfStream)
                 {

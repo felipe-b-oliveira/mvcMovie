@@ -15,9 +15,6 @@ namespace exercicioLambda_1
 
             try
             {
-                //Console.WriteLine("Digite o caminho completo do arquivo:");
-                //string caminho = Console.ReadLine();
-
                 do
                 {
                     Console.WriteLine("Digite o caminho completo do arquivo:");
