@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using VendasWebMvc.Models;
+using VendasWebMvc.Models.ViewModels;
 
 namespace VendasWebMvc.Controllers
 {
@@ -20,6 +20,13 @@ namespace VendasWebMvc.Controllers
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            ViewData["Message"] = "App MVC Vendas Web do Curso C#";
+            ViewData["Professor"] = "Nelio Alves";
             return View();
         }
 
