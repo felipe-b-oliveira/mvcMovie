@@ -43,7 +43,8 @@ namespace vendasWebMvc
                         builder => builder.MigrationsAssembly("vendasWebMvc")));
 
             services.AddScoped<PopularBaseService>();
-            services.AddScoped<VendedorServico>();
+            services.AddScoped<ServicoVendedor>();
+            services.AddScoped<ServicoDepartamento>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
