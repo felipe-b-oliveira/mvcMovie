@@ -4,15 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace VendasWebMvc.Models
+namespace vendasWebMvc.Models
 {
-    public class VendasWebMvcContext : DbContext
+    public class vendasWebMvcContext : DbContext
     {
-        public VendasWebMvcContext (DbContextOptions<VendasWebMvcContext> options)
+        public vendasWebMvcContext (DbContextOptions<vendasWebMvcContext> options)
             : base(options)
         {
         }
 
-        public DbSet<VendasWebMvc.Models.Departamento> Departamento { get; set; }
+        public DbSet<Departamento> Departamento { get; set; }
+        public DbSet<Vendedor> Vendedor { get; set; }
+        public DbSet<RegistroDeVendas> RegistroDeVendas { get; set; }
+
     }
 }

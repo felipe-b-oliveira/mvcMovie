@@ -4,20 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using VendasWebMvc.Models.ViewModels;
+using vendasWebMvc.Models.ViewModels;
 
-namespace VendasWebMvc.Controllers
+namespace vendasWebMvc.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -25,8 +17,16 @@ namespace VendasWebMvc.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "App MVC Vendas Web do Curso C#";
+            ViewData["Message"] = "Vendas Web App MVC do Curso C#";
             ViewData["Professor"] = "Nelio Alves";
+
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
             return View();
         }
 
