@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using vendasWebMvc.Servicos;
+using vendasWebMvc.Models;
 
 namespace vendasWebMvc.Controllers
 {
@@ -22,6 +23,19 @@ namespace vendasWebMvc.Controllers
         {
             var list = _vendedorServico.FindAll(); //2. Retorna uma lista de vendedores
             return View(list); //3. Passa a lista como um argumento
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Vendedor vendedor)
+        {
+            _vendedorServico.Insert(vendedor);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
