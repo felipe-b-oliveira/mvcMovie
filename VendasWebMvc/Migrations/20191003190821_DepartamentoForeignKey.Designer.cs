@@ -8,7 +8,7 @@ using vendasWebMvc.Models;
 
 namespace vendasWebMvc.Migrations
 {
-    [DbContext(typeof(vendasWebMvcContext))]
+    [DbContext(typeof(VendasWebMvcContext))]
     [Migration("20191003190821_DepartamentoForeignKey")]
     partial class DepartamentoForeignKey
     {

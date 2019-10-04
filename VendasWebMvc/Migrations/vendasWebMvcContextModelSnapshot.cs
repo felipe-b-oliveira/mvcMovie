@@ -7,7 +7,7 @@ using vendasWebMvc.Models;
 
 namespace vendasWebMvc.Migrations
 {
-    [DbContext(typeof(vendasWebMvcContext))]
+    [DbContext(typeof(VendasWebMvcContext))]
     partial class vendasWebMvcContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

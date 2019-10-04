@@ -9,9 +9,11 @@ namespace vendasWebMvc.Data
 {
     public class PopularBaseService
     {
-        private vendasWebMvcContext _context;
+        private VendasWebMvcContext _context;
 
-        public PopularBaseService(vendasWebMvcContext context)
+        // Quando um PopularBaseService for criado, ele automaticamente vai 
+        // receber uma instância do context também para a persistência dos dados. 
+        public PopularBaseService(VendasWebMvcContext context)
         {
             _context = context;
         }

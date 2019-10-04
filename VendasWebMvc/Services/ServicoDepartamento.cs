@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using vendasWebMvc.Models;
 
-namespace vendasWebMvc.Servicos
+namespace vendasWebMvc.Services
 {
     public class ServicoDepartamento
     {
-        private readonly vendasWebMvcContext _context;
+        private readonly VendasWebMvcContext _context;
 
-        public ServicoDepartamento(vendasWebMvcContext context)
+        public ServicoDepartamento(VendasWebMvcContext context)
         {
             _context = context;
         }

@@ -12,10 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
 using vendasWebMvc.Data;
-using vendasWebMvc.Servicos;
+using vendasWebMvc.Services;
 
 namespace vendasWebMvc
 {
+    // Configuracoes do projeto
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -26,6 +27,7 @@ namespace vendasWebMvc
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // Configura os servicos da aplicacao
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -38,7 +40,7 @@ namespace vendasWebMvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<vendasWebMvcContext>(options =>
+            services.AddDbContext<VendasWebMvcContext>(options =>
                      options.UseMySql(Configuration.GetConnectionString("vendasWebMvcContext"), 
                         builder => builder.MigrationsAssembly("vendasWebMvc")));
 
@@ -48,11 +50,14 @@ namespace vendasWebMvc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Configura o compartamento das Requisições/Pipeline http
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, PopularBaseService popularBaseService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // O serviço popularBaseService será executado se a aplicação estiver no perfil de desenvolvimento
                 popularBaseService.Popular();
             }
             else
@@ -65,6 +70,9 @@ namespace vendasWebMvc
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            // Rota básica/default da aplicacao
+            // HomeController > Index
+            // {id?} A interrogacao indica que o id é opcional
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
