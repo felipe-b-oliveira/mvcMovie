@@ -11,9 +11,11 @@ namespace vendasWebMvc.Controllers
 {
     public class DepartamentosController : Controller
     {
-        private readonly vendasWebMvcContext _context;
+        // Dependencia da classe de banco
+        private readonly VendasWebMvcContext _context;
 
-        public DepartamentosController(vendasWebMvcContext context)
+        // Controle para injecao de dependência
+        public DepartamentosController(VendasWebMvcContext context)
         {
             _context = context;
         }

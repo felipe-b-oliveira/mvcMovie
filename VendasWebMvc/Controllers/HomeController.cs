@@ -10,6 +10,8 @@ namespace vendasWebMvc.Controllers
 {
     public class HomeController : Controller
     {
+        // Os métodos do HomeController são as ações a sererem executadas
+        // Ao retornar view o framework ira procurar uma página com o mesmo nome do método
         public IActionResult Index()
         {
             return View();

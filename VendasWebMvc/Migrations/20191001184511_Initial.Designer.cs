@@ -7,7 +7,7 @@ using vendasWebMvc.Models;
 
 namespace vendasWebMvc.Migrations
 {
-    [DbContext(typeof(vendasWebMvcContext))]
+    [DbContext(typeof(VendasWebMvcContext))]
     [Migration("20191001184511_Initial")]
     partial class Initial
     {
