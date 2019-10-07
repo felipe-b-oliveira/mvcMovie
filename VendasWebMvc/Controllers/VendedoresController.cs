@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using vendasWebMvc.Services;
 using vendasWebMvc.Models;
 using vendasWebMvc.Models.ViewModels;
+using vendasWebMvc.Services.Exceptions;
+using System.Diagnostics;
 
 namespace vendasWebMvc.Controllers
 {
@@ -40,6 +42,13 @@ namespace vendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Vendedor vendedor)
         {
+            if (!ModelState.IsValid)
+            {
+                var departamentos = _servicoDepartamento.FindAll();
+                var viewModel = new FormViewModelVendedor { vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
+
             _servicoVendedor.Insert(vendedor);
 
             // Retorna para a página index
@@ -50,13 +59,13 @@ namespace vendasWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _servicoVendedor.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(obj);
@@ -73,6 +82,78 @@ namespace vendasWebMvc.Controllers
             // Retorna para a página index
             return RedirectToAction(nameof(Index));
 
+        }
+
+        public IActionResult Details (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
+            }
+
+            var obj = _servicoVendedor.FindById(id.Value);
+            if (obj == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
+            }
+
+            return View(obj);
+        }
+
+        public IActionResult Edit (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
+            }
+
+            var obj = _servicoVendedor.FindById(id.Value);
+            if (obj == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
+            }
+
+            List<Departamento> departamentos = _servicoDepartamento.FindAll();
+            FormViewModelVendedor viewModel = new FormViewModelVendedor { vendedor = obj, Departamentos = departamentos };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Vendedor vendedor)
+        {
+            if (!ModelState.IsValid)
+            {
+                var departamentos = _servicoDepartamento.FindAll();
+                var viewModel = new FormViewModelVendedor { vendedor = vendedor, Departamentos = departamentos};
+                return View(viewModel);
+            }
+
+            if (id != vendedor.Id)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Ids não correspondem" });
+            }
+            
+            try
+            {
+                _servicoVendedor.Update(vendedor);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(ApplicationException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+        }
+
+        public IActionResult Error (string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                // Pegar o ID interno da requisição Http
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);          
         }
     }
 }
