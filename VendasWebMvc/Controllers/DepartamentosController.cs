@@ -23,7 +23,10 @@ namespace vendasWebMvc.Controllers
         // GET: Departamentos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departamento.ToListAsync());
+            // A classe Departamento não está configurada para os serviços pois foi a primeira do exercício
+            // Tentei configurar a mesma, mas parei na parte do argumento Departamento implementado na classe Vendedor
+            var list = await _context.Departamento.OrderBy(z => z.Nome).ToListAsync();
+            return View(list);
         }
 
         // GET: Departamentos/Details/5
