@@ -6,18 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
+using vendasWebMvc.Services;
 
 namespace vendasWebMvc.Controllers
 {
     public class DepartamentosController : Controller
     {
         // Dependencia da classe de banco
-        private readonly VendasWebMvcContext _context;
+        private readonly DepartamentoService _departamentoService;
 
         // Controle para injecao de dependência
-        public DepartamentosController(VendasWebMvcContext context)
+        public DepartamentosController(DepartamentoService departamentoService)
         {
-            _context = context;
+            _departamentoService = departamentoService;
         }
 
         // GET: Departamentos
@@ -25,11 +26,11 @@ namespace vendasWebMvc.Controllers
         {
             // A classe Departamento não está configurada para os serviços pois foi a primeira do exercício
             // Tentei configurar a mesma, mas parei na parte do argumento Departamento implementado na classe Vendedor
-            var list = await _context.Departamento.OrderBy(z => z.Nome).ToListAsync();
+            var list = await _departamentoService.FindAllAsync();
             return View(list);
         }
 
-        // GET: Departamentos/Details/5
+        // GET: Departamentos/Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,36 +38,30 @@ namespace vendasWebMvc.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (departamento == null)
+            var obj = await _departamentoService.FindByIdAsync(id.Value);
+            if (obj == null)
             {
                 return NotFound();
             }
 
-            return View(departamento);
+            return View(obj);
         }
 
-        // GET: Departamentos/Create
+        // GET: Departamentos/Create -> Nova View Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Departamentos/Create
+        // POST: Departamentos/Create - > Novo Departamento
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome")] Departamento departamento)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(departamento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(departamento);
+            await _departamentoService.InsertAsync(departamento);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Departamentos/Edit/5
@@ -77,10 +72,11 @@ namespace vendasWebMvc.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento.FindAsync(id);
+            var departamento = await _departamentoService.FindByIdAsync(id.Value);
             if (departamento == null)
             {
                 return NotFound();
+                //return RedirectToAction(nameof(Error), new { message = "Departamento não encontrado" });
             }
             return View(departamento);
         }
@@ -101,12 +97,12 @@ namespace vendasWebMvc.Controllers
             {
                 try
                 {
-                    _context.Update(departamento);
-                    await _context.SaveChangesAsync();
+                    await _departamentoService.UpdateAsync(departamento);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartamentoExists(departamento.Id))
+                    if (!_departamentoService.DepartamentoExists(departamento.Id))
                     {
                         return NotFound();
                     }
@@ -115,7 +111,6 @@ namespace vendasWebMvc.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(departamento);
         }
@@ -128,8 +123,7 @@ namespace vendasWebMvc.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departamento = await _departamentoService.FindByIdAsync(id.Value);
             if (departamento == null)
             {
                 return NotFound();
@@ -143,15 +137,9 @@ namespace vendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var departamento = await _context.Departamento.FindAsync(id);
-            _context.Departamento.Remove(departamento);
-            await _context.SaveChangesAsync();
+            await _departamentoService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
-        private bool DepartamentoExists(int id)
-        {
-            return _context.Departamento.Any(e => e.Id == id);
-        }
+        
     }
 }
