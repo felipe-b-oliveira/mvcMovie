@@ -35,5 +35,6 @@ namespace vendasWebMvc.Services
                 .OrderByDescending(x => x.Data)
                 .ToListAsync();
         }
+
     }
 }
