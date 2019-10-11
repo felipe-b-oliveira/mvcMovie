@@ -45,14 +45,21 @@ namespace vendasWebMvc.Services
         // Operacao assincrona
         public async Task RemoveAsync(int id)
         {
-            // Operacao realizada no banco
-            var obj = await _context.Vendedor.FindAsync(id);
+            try
+            {
+                // Operacao realizada no banco
+                var obj = await _context.Vendedor.FindAsync(id);
 
-            // Operacao realizada em memoria
-            _context.Vendedor.Remove(obj);
+                // Operacao realizada em memoria
+                _context.Vendedor.Remove(obj);
 
-            // Operacao realizada no banco
-            await _context.SaveChangesAsync();
+                // Operacao realizada no banco
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                throw new IntegrityException("Não foi possível deletar o vendedor(a) porque há vendas atreladas a ele.");
+            }
         }
 
         // Operacao assincrona
@@ -61,7 +68,7 @@ namespace vendasWebMvc.Services
             // Operacao realizada no banco
             // Código movido de dentro fo If para fora do mesmo e atribuido a variável booleana hasAny
             bool hasAny = await _context.Vendedor.AnyAsync(x => x.Id == obj.Id);
-                        
+
             if (!hasAny)
             {
                 throw new NotFoundException("Id não encontrado");
@@ -74,7 +81,7 @@ namespace vendasWebMvc.Services
                 // Operacao realizada no banco
                 await _context.SaveChangesAsync();
             }
-            catch(DbUpdateConcurrencyException e)
+            catch (DbUpdateConcurrencyException e)
             {
                 throw new DbConcurrencyException(e.Message);
             }

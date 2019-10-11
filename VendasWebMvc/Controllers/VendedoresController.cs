@@ -22,8 +22,8 @@ namespace vendasWebMvc.Controllers
         // Desde modo o servico departamento será injetado no objeto servico vendedor
         public VendedoresController(VendedorService servicoVendedor, DepartamentoService servicoDepartamento)
         {
-           _vendedorService = servicoVendedor;
-           _departamentoService = servicoDepartamento;
+            _vendedorService = servicoVendedor;
+            _departamentoService = servicoDepartamento;
         }
 
         // Operacao assincrona
@@ -53,7 +53,7 @@ namespace vendasWebMvc.Controllers
                 return View(viewModel);
             }
 
-           await _vendedorService.InsertAsync(vendedor);
+            await _vendedorService.InsertAsync(vendedor);
 
             // Retorna para a página index
             return RedirectToAction(nameof(Index));
@@ -83,15 +83,21 @@ namespace vendasWebMvc.Controllers
         // Operacao assincrona
         public async Task<IActionResult> Delete(int id)
         {
-            await _vendedorService.RemoveAsync(id);
+            try
+            {
+                await _vendedorService.RemoveAsync(id);
 
-            // Retorna para a página index
-            return RedirectToAction(nameof(Index));
-
+                // Retorna para a página index
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         // Operacao assincrona
-        public async Task<IActionResult> Details (int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -108,7 +114,7 @@ namespace vendasWebMvc.Controllers
         }
 
         // Operacao assincrona
-        public async Task<IActionResult> Edit (int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -134,7 +140,7 @@ namespace vendasWebMvc.Controllers
             if (!ModelState.IsValid)
             {
                 var departamentos = await _departamentoService.FindAllAsync();
-                var viewModel = new FormViewModelVendedor { vendedor = vendedor, Departamentos = departamentos};
+                var viewModel = new FormViewModelVendedor { vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
 
@@ -142,19 +148,19 @@ namespace vendasWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = "Ids não correspondem" });
             }
-            
+
             try
             {
                 await _vendedorService.UpdateAsync(vendedor);
                 return RedirectToAction(nameof(Index));
             }
-            catch(ApplicationException e)
+            catch (ApplicationException e)
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
         }
 
-        public IActionResult Error (string message)
+        public IActionResult Error(string message)
         {
             var viewModel = new ErrorViewModel
             {
@@ -162,7 +168,7 @@ namespace vendasWebMvc.Controllers
                 // Pegar o ID interno da requisição Http
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             };
-            return View(viewModel);          
+            return View(viewModel);
         }
     }
 }

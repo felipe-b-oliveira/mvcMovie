@@ -61,7 +61,7 @@ namespace vendasWebMvc.Models
 
         public double TotalDeVendas(DateTime inicial, DateTime final)
         {
-            return Vendas.Where(rv => rv.Data >= inicial && rv.Data <= final).Sum(rv => rv.Quantidade);
+            return Vendas.Where(rv => rv.Data >= inicial && rv.Data <= final).Sum(rv => rv.Valor);
         }
     }
 }
