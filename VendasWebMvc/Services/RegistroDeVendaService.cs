@@ -36,5 +36,26 @@ namespace vendasWebMvc.Services
                 .ToListAsync();
         }
 
+        public async Task<List<IGrouping<Departamento, RegistroDeVendas>>> FindByDateGroupingAsync(DateTime? minDate, DateTime? maxDate)
+        {
+            var result = from obj in _context.RegistroDeVendas select obj;
+            if (minDate.HasValue)
+            {
+                result = result.Where(x => x.Data >= minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                result = result.Where(x => x.Data <= maxDate.Value);
+            }
+
+            // Efetuando os JOINs das tabelas Vendedor e Departamento
+            return await result
+                .Include(x => x.Vendedor)
+                .Include(x => x.Vendedor.Departamento)
+                .OrderByDescending(x => x.Data)
+                .GroupBy(x => x.Vendedor.Departamento) //Agrupa resultados
+                .ToListAsync();
+        }
+
     }
 }
